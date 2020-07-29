@@ -8,11 +8,13 @@ public class FollowTransform : MonoBehaviour
     [SerializeField] private Vector3 offset;
     private MovableDirect mover;
 
-    private void Awake() {
+    private void Awake()
+    {
         mover = GetComponent<MovableDirect>();
     }
 
-    private void Update() {
+    private void Update()
+    {
         mover.MoveTo(target.position + offset);
     }
 }

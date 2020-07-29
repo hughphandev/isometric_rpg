@@ -22,7 +22,7 @@ public class PlayerAttackMouse : MonoBehaviour
             Vector3 dir = ray.GetPoint(enter) - transform.position;
             float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
             transform.eulerAngles = new Vector3(0, angle, 0);
-            attacker.Attack();
+            attacker.Attack(0);
         }
     }
 }

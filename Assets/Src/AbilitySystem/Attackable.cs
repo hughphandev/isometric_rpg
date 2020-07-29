@@ -1,4 +1,6 @@
+using System.Collections;
+
 public interface Attackable
 {
-    void Attack();
+    IEnumerator Attack(float delay);
 }

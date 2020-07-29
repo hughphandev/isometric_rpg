@@ -13,4 +13,14 @@ public class MoveNavMeshDirect : MonoBehaviour, MovableDirect
     {
         agent.SetDestination(position);
     }
+
+    public void Pause()
+    {
+        agent.isStopped = true;
+    }
+
+    public void Continue()
+    {
+        agent.isStopped = false;
+    }
 }

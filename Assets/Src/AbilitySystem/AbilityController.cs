@@ -14,11 +14,18 @@ public class AbilityController : MonoBehaviour
     private AudioSource audioSource;
     private float coolDown;
     private float coolDownRemain;
+    private float castTime;
     private Attackable attacker;
+    private MovableDirect mover;
 
     public Ability Ability { get => ability; set => ability = value; }
     public float CoolDownRemain { get => coolDownRemain; }
     public float CoolDown { get => coolDown; set => coolDown = value; }
+
+    private void Awake()
+    {
+        mover = weapon.GetComponentInParent<MovableDirect>();
+    }
 
     private void Start()
     {
@@ -31,7 +38,7 @@ public class AbilityController : MonoBehaviour
         {
             if (Input.GetKeyDown(activateKey))
             {
-                ButtonTriggered();
+                StartCoroutine(ButtonTriggered());
             }
         }
         else
@@ -44,6 +51,7 @@ public class AbilityController : MonoBehaviour
     {
         this.ability = ability;
 
+        castTime = ability.castTime;
         coolDown = ability.coolDown;
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = ability.sound;
@@ -52,12 +60,12 @@ public class AbilityController : MonoBehaviour
 
     private void InitWeapon()
     {
-        switch(ability.Type)
+        switch (ability.Type)
         {
             case "Projectile":
-            attacker = weapon.GetComponent<ProjectileAttack>();
-            (attacker as ProjectileAttack).Projectile = (ability as ProjectileAbility).projectile;
-            break;
+                attacker = weapon.GetComponent<ProjectileAttack>();
+                (attacker as ProjectileAttack).Projectile = (ability as ProjectileAbility).projectile;
+                break;
         }
     }
     private void TickCoolDown()
@@ -65,10 +73,12 @@ public class AbilityController : MonoBehaviour
         coolDownRemain -= Time.deltaTime;
     }
 
-    private void ButtonTriggered()
+    private IEnumerator ButtonTriggered()
     {
+        mover.Pause();
         coolDownRemain = coolDown;
         audioSource.Play();
-        attacker.Attack();
+        yield return attacker.Attack(castTime);
+        mover.Continue();
     }
 }
